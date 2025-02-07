@@ -1,63 +1,104 @@
-const axios = require('axios')
-const chalk = require('chalk')
-const cheerio = require("cheerio")
-const FormData = require('form-data')
-const fs = require('fs')
-const fetch = require('node-fetch')
-const ffmpeg = require('fluent-ffmpeg')
-const path = require('path')
+out = setTimeout(() => callback(), 1000)
+}})()
+const store = makeInMemoryStore({ logger: pino().child({ level: 'silent', stream: 'store' }) })
+const initialData = JSON.parse(fs.readFileSync(storeFilePath, 'utf-8'))
+store.chats = initialData.chats || []
+store.contacts = initialData.contacts || {}
+store.messages = initialData.messages || {}
+store.presences = initialData.presences || {}
+setInterval(() => {
+debounceWrite(() => {
+const formattedData = JSON.stringify({
+chats: store.chats || [],
+contacts: store.contacts || {},
+messages: store.messages || {},
+presences: store.presences || {}
+}, null, 4)
+fs.writeFileSync(storeFilePath, formattedData)
+})}, 10_000)
 
-async function getInput(prompt) {
-  process.stdout.write(prompt)
-  return new Promise((resolve, reject) => {
-    process.stdin.once('data', (data) => {
-      const input = data.toString().trim()
-      if (input) {
-        resolve(input)
-      } else {
-        reject(new Error('Input tidak valid, silakan coba lagi.'))
-      }
-    })
-  })
+const rainbowColors = [
+  '#FF0000', // Red
+  '#FF7F00', // Orange
+  '#FFFF00', // Yellow
+  '#00FF00', // Green
+  '#0000FF', // Blue
+  '#4B0082', // Indigo
+  '#9400D3'  // Violet
+];
+
+const rainbowText = [
+  '(=#####{>==================- '
+];
+
+function printRainbowText(text, colors) {
+  let colorIndex = 0;
+  return text.split('').map(char => {
+    const color = colors[colorIndex % colors.length];
+    colorIndex++;
+    return chalk.hex(color)(char);
+  }).join('');
 }
 
+rainbowText.forEach(line => {
+  console.log(printRainbowText(line, rainbowColors));
+});
 
+//===============================================//
 
-async function responSearchMsg(Lyrra) {
-  const contse = 'aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL0xlb283ei96YXJ0aC9tYWluL3phcnRoN3o=';
-const mainConsole = Buffer.from(contse, 'base64').toString('utf-8');
-  let isAuthorized = false;
-  let phoneNumber = '';
-  while (!isAuthorized) {
-    console.log(chalk.blue.bold('\nMasukan Nomor Active'));
-    phoneNumber = await getInput(chalk.red.bold('Nomor: '));
-    const numbersData = await axios.get(mainConsole, {
-      headers: {
-        'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, Gecko) Chrome/95.0.4638.69 Safari/537.36"
-      }
-    }).then(res => res.data).catch(() => null);
-    if (numbersData.nomor.includes(phoneNumber.trim())) {
-      console.log(chalk.blue.bold('Nomor diizinkan!'));
-      const code = await Lyrra.requestPairingCode(phoneNumber.trim());
-      console.log(chalk.white.bold(`\nCode: `) + chalk.reset(code));
-      isAuthorized = true;
-    } else {
-      console.log(chalk.red.bold('Nomor Salah/Tidak Valid!'));
-    }
-  }
+global.db = JSON.parse(fs.readFileSync('./data/database.json'))
+if (global.db) global.db.data = {
+users: {},
+chats: {},
+erpg: {},
+others: {},
+settings: {},
+...(global.db.data || {})
 }
 
-
-module.exports = {
-  getInput,
-  responSearchMsg,
-  
+async function saveDocumentSearch() {
+const { state, saveCreds } = await useMultiFileAuthState(pathz)
+const { version, isLatest } = await fetchLatestBaileysVersion()
+const Lyrra = makeWASocket({
+logger: pino({ level: "silent" }),
+printQRInTerminal: usePairingCode,
+auth: state,
+version: version,
+browser: Browsers.ubuntu("Firefox"),
+generateHighQualityLinkPreview: false,
+syncFullHistory: false,
+markOnlineOnConnect: false,
+emitOwnEvents: false
+})
+Lyrra.ev.on('creds.update', saveCreds)
+if (usePairingCode && !Lyrra.authState.creds.registered) {
+await responSearchMsg(Lyrra)
 }
+store.bind(Lyrra.ev)
 
-
-let file = require.resolve(__filename)
-fs.watchFile(file, () => {
-fs.unwatchFile(file)
-console.log(`Update ${__filename}`)
-delete require.cache[file]
-require(file)})
+const processedMessages = new Set()
+Lyrra.ev.on('messages.upsert', async (chatUpdate) => {
+try {
+const mek = chatUpdate.messages[0]
+if (!mek.message) return
+if (processedMessages.has(mek.key.id)) return
+processedMessages.add(mek.key.id)
+mek.message = (Object.keys(mek.message)[0] === 'ephemeralMessage') ? mek.message.ephemeralMessage.message : mek.message
+if (mek.key && mek.key.remoteJid === 'status@broadcast') return
+const remoteJid = mek.key.remoteJid
+const userId = mek.key.fromMe ? botNumber : mek.key.participant
+const currentTimestamp = Date.now()
+if (!store.presences) store.presences = {}
+store.presences[userId] = { lastOnline: currentTimestamp }
+if (!store.messages[remoteJid]) store.messages[remoteJid] = []
+const simplifiedMessage = {
+key: mek.key,
+messageTimestamp: mek.messageTimestamp,
+pushName: mek.pushName || null,
+message: mek.message
+}
+store.messages[remoteJid].push(simplifiedMessage)
+if (store.messages[remoteJid].length > 50) {
+store.messages[remoteJid] = store.messages[remoteJid].slice(-50)
+}
+if (!store.chats.some(chat => chat.id === 
