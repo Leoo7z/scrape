@@ -1,104 +1,80 @@
-out = setTimeout(() => callback(), 1000)
-}})()
-const store = makeInMemoryStore({ logger: pino().child({ level: 'silent', stream: 'store' }) })
-const initialData = JSON.parse(fs.readFileSync(storeFilePath, 'utf-8'))
-store.chats = initialData.chats || []
-store.contacts = initialData.contacts || {}
-store.messages = initialData.messages || {}
-store.presences = initialData.presences || {}
-setInterval(() => {
-debounceWrite(() => {
-const formattedData = JSON.stringify({
-chats: store.chats || [],
-contacts: store.contacts || {},
-messages: store.messages || {},
-presences: store.presences || {}
-}, null, 4)
-fs.writeFileSync(storeFilePath, formattedData)
-})}, 10_000)
 
-const rainbowColors = [
-  '#FF0000', // Red
-  '#FF7F00', // Orange
-  '#FFFF00', // Yellow
-  '#00FF00', // Green
-  '#0000FF', // Blue
-  '#4B0082', // Indigo
-  '#9400D3'  // Violet
-];
-
-const rainbowText = [
-  '(=#####{>==================- '
-];
-
-function printRainbowText(text, colors) {
-  let colorIndex = 0;
-  return text.split('').map(char => {
-    const color = colors[colorIndex % colors.length];
-    colorIndex++;
-    return chalk.hex(color)(char);
-  }).join('');
-}
-
-rainbowText.forEach(line => {
-  console.log(printRainbowText(line, rainbowColors));
-});
-
-//===============================================//
-
-global.db = JSON.parse(fs.readFileSync('./data/database.json'))
-if (global.db) global.db.data = {
-users: {},
-chats: {},
-erpg: {},
-others: {},
-settings: {},
-...(global.db.data || {})
-}
-
-async function saveDocumentSearch() {
-const { state, saveCreds } = await useMultiFileAuthState(pathz)
-const { version, isLatest } = await fetchLatestBaileysVersion()
-const Lyrra = makeWASocket({
-logger: pino({ level: "silent" }),
-printQRInTerminal: usePairingCode,
-auth: state,
-version: version,
-browser: Browsers.ubuntu("Firefox"),
-generateHighQualityLinkPreview: false,
-syncFullHistory: false,
-markOnlineOnConnect: false,
-emitOwnEvents: false
-})
-Lyrra.ev.on('creds.update', saveCreds)
-if (usePairingCode && !Lyrra.authState.creds.registered) {
-await responSearchMsg(Lyrra)
-}
-store.bind(Lyrra.ev)
-
-const processedMessages = new Set()
-Lyrra.ev.on('messages.upsert', async (chatUpdate) => {
-try {
-const mek = chatUpdate.messages[0]
-if (!mek.message) return
-if (processedMessages.has(mek.key.id)) return
-processedMessages.add(mek.key.id)
-mek.message = (Object.keys(mek.message)[0] === 'ephemeralMessage') ? mek.message.ephemeralMessage.message : mek.message
-if (mek.key && mek.key.remoteJid === 'status@broadcast') return
-const remoteJid = mek.key.remoteJid
-const userId = mek.key.fromMe ? botNumber : mek.key.participant
-const currentTimestamp = Date.now()
-if (!store.presences) store.presences = {}
-store.presences[userId] = { lastOnline: currentTimestamp }
-if (!store.messages[remoteJid]) store.messages[remoteJid] = []
-const simplifiedMessage = {
-key: mek.key,
-messageTimestamp: mek.messageTimestamp,
-pushName: mek.pushName || null,
-message: mek.message
-}
-store.messages[remoteJid].push(simplifiedMessage)
-if (store.messages[remoteJid].length > 50) {
-store.messages[remoteJid] = store.messages[remoteJid].slice(-50)
-}
-if (!store.chats.some(chat => chat.id === 
+if (erpg) {
+if (!('rpg' in erpg)) erpg.rpg = false
+if (!('money' in erpg)) erpg.money = 3000
+if (!('bank' in erpg)) erpg.bank = 0
+if (!('kapal' in erpg)) erpg.kapal = false
+if (!('darahkapal' in erpg)) erpg.darahkapal = 100
+if (!('pickaxe' in erpg)) erpg.pickaxe = false
+if (!('darahpickaxe' in erpg)) erpg.darahpickaxe = 100
+if (!('kapak' in erpg)) erpg.kapak = false
+if (!('darahkapak' in erpg)) erpg.darahkapak = 100
+if (!('bzirah' in erpg)) erpg.bzirah = false
+if (!('darahbzirah' in erpg)) erpg.darahbzirah = 100
+if (!('pedang' in erpg)) erpg.pedang = false
+if (!('darahpedang' in erpg)) erpg.darahpedang = 100
+if (!('darahuser' in erpg)) erpg.darahuser = 100
+if (!('rumah' in erpg)) erpg.rumah = 0
+if (!('common' in erpg)) erpg.common = 0
+if (!('uncommon' in erpg)) erpg.uncommon = 0
+if (!('mythic' in erpg)) erpg.mythic = 0
+if (!('legendary' in erpg)) erpg.legendary = 0
+if (!('besi' in erpg)) erpg.besi = 4
+if (!('kayu' in erpg)) erpg.kayu = 2
+if (!('emas' in erpg)) erpg.emas = 0
+if (!('perak' in erpg)) erpg.perak = 0
+if (!('emerald' in erpg)) erpg.emerald = 0
+if (!('diamond' in erpg)) erpg.diamond = 0
+if (!('batubara' in erpg)) erpg.batubara = 0
+if (!('bulu' in erpg)) erpg.bulu = 0
+if (!('kain' in erpg)) erpg.kain = 0
+if (!('botol' in erpg)) erpg.botol = 0
+if (!('kardus' in erpg)) erpg.kardus = 0
+if (!('kaleng' in erpg)) erpg.kaleng = 0
+if (!('gelas' in erpg)) erpg.gelas = 0
+if (!('plastik' in erpg)) erpg.plastik = 0
+if (!('wilayah' in erpg)) erpg.wilayah = "indonesia"
+if (!('wilayahrumah' in erpg)) erpg.wilayahrumah = "indonesia"
+if (!('musuh' in erpg)) erpg.musuh = 0
+if (!('burutime' in erpg)) erpg.burutime = 0
+if (!('lastclaim' in erpg)) erpg.lastclaim = 0
+if (!('lastdagang' in erpg)) erpg.lastdagang = 0
+if (!('lastbansos' in erpg)) erpg.lastbansos = 0
+if (!('lastkerja' in erpg)) erpg.lastkerja = 0
+if (!('lastrampok' in erpg)) erpg.lastrampok = 0
+if (!('domba' in erpg)) erpg.domba = 0
+if (!('sapi' in erpg)) erpg.sapi = 0
+if (!('ayam' in erpg)) erpg.ayam = 0
+if (!('banteng' in erpg)) erpg.banteng = 0
+if (!('gajah' in erpg)) erpg.gajah = 0
+if (!('harimau' in erpg)) erpg.harimau = 0
+if (!('kambing' in erpg)) erpg.kambing = 0
+if (!('panda' in erpg)) erpg.panda = 0
+if (!('buaya' in erpg)) erpg.buaya = 0
+if (!('kerbau' in erpg)) erpg.kerbau = 0
+if (!('monyet' in erpg)) erpg.monyet = 0
+if (!('babihutan' in erpg)) erpg.babihutan = 0
+if (!('babi' in erpg)) erpg.babi = 0
+if (!('ikan' in erpg)) erpg.ikan = 0
+if (!('paus' in erpg)) erpg.paus = 0
+if (!('kepiting' in erpg)) erpg.kepiting = 0
+if (!('gurita' in erpg)) erpg.gurita = 0
+if (!('cumi' in erpg)) erpg.cumi = 0
+if (!('buntal' in erpg)) erpg.buntal = 0
+if (!('dory' in erpg)) erpg.dory = 0
+if (!('lumba' in erpg)) erpg.lumba = 0
+if (!('lobster' in erpg)) erpg.lobster = 0
+if (!('hiu' in erpg)) erpg.hiu = 0
+if (!('udang' in erpg)) erpg.udang = 0
+if (!('orca' in erpg)) erpg.orca = 0
+if (!('apel' in erpg)) erpg.apel = 0
+if (!('anggur' in erpg)) erpg.anggur = 0
+if (!('jeruk' in erpg)) erpg.jeruk = 0
+if (!('mangga' in erpg)) erpg.mangga = 0
+if (!('pisang' in erpg)) erpg.pisang = 0
+if (!('makanan' in erpg)) erpg.makanan = 0
+if (!('bibitanggur' in erpg)) erpg.bibitanggur = 0
+if (!('bibitpisang' in erpg)) erpg.bibitpisang = 0
+if (!('bibitapel' in erpg)) erpg.bibitapel = 0
+if (!('bibitmangga' in erpg)) erpg.bibitmangga = 0
+if (!('bibitjeruk' in erpg)) erpg.bibitjeruk = 0
