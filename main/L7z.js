@@ -14,3 +14,39 @@ m.reply(`Selamat Kamu Mendapatkan:\n\n*🎁 HADIAH*\n- + Rp ${saldo} \n- + ${lim
 }
 }
 break
+
+
+`${vircion} • ${_p}adventure
+  ${vircion} • ${_p}beli
+  ${vircion} • ${_p}bank
+  ${vircion} • ${_p}shop
+  ${vircion} • ${_p}berburu
+  ${vircion} • ${_p}crafting
+  ${vircion} • ${_p}heal
+  ${vircion} • ${_p}nyampah
+  ${vircion} • ${_p}inventory
+  ${vircion} • ${_p}daily
+  ${vircion} • ${_p}weekly
+  ${vircion} • ${_p}monthly
+  ${vircion} • ${_p}yearly
+  ${vircion} • ${_p}ngojek
+  ${vircion} • ${_p}polisi
+  ${vircion} • ${_p}roket
+  ${vircion} • ${_p}wikwik
+  ${vircion} • ${_p}ewe-paksa
+  ${vircion} • ${_p}selectskill
+  ${vircion} • ${_p}cekskill
+  ${vircion} • ${_p}makan
+  ${vircion} • ${_p}tidur
+  ${vircion} • ${_p}transfer
+  ${vircion} • ${_p}joinrpg
+  ${vircion} • ${_p}exitrpg
+  ${vircion} • ${_p}jual
+  ${vircion} • ${_p}kerja
+  ${vircion} • ${_p}memancing
+  ${vircion} • ${_p}merampok
+  ${vircion} • ${_p}mining
+  ${vircion} • ${_p}nebang
+  ${vircion} • ${_p}repair
+  ${vircion} • ${_p}atmall
+  ${vircion} • ${_p}dompet`
