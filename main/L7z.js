@@ -16,7 +16,7 @@ m.reply(`Selamat Kamu Mendapatkan:\n\n*🎁 HADIAH*\n- + Rp ${saldo} \n- + ${lim
 break
 
 
-`${vircion} • ${_p}adventure
+${vircion} • ${_p}adventure
   ${vircion} • ${_p}beli
   ${vircion} • ${_p}bank
   ${vircion} • ${_p}shop
@@ -49,4 +49,4 @@ break
   ${vircion} • ${_p}nebang
   ${vircion} • ${_p}repair
   ${vircion} • ${_p}atmall
-  ${vircion} • ${_p}dompet`
+  ${vircion} • ${_p}dompet
