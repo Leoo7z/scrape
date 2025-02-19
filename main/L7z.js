@@ -2,8 +2,8 @@
   "bot": [
     {
       "dbHideView": false,
-      "userName": "nama_username1",
-      "userTokens": "token_user1"
+      "userName": "Lyrra-Ai",
+      "userTokens": "V4RXP7645"
     },
     {
       "dbHideView": false,
