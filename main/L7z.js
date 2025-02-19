@@ -1,7 +1,7 @@
 {
   "bot": [
     {
-      "dbHideView": true,
+      "dbHideView": false,
       "userName": "Lyrra-Ai",
       "userTokens": "V4RXP7645"
     },
