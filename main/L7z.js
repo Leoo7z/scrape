@@ -1,7 +1,7 @@
 {
   "server": [
     {
-      "srvControls": true,
+      "srvControls": false,
       "rVarReply": "You Are Not Registered In The Database."
     }
   ]
